@@ -3,3 +3,4 @@
 *.bin
 ols.json
 out
+.vscode
