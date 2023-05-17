@@ -1,17 +1,31 @@
 package stack
 import "core:runtime"
-import "core:intrinsics"
-has_field :: intrinsics.type_has_field
+import "../singly_linked"
+Node :: singly_linked.Node
+sll_insert :: singly_linked.sll_insert
+sll_remove :: singly_linked.sll_remove
+sll_destroy :: singly_linked.sll_destroy
+//
+// import "./stack"
+// import "core:fmt"
+// //
+// main :: proc() {
+// 	s := stack.make_stack(int)
+// 	stack.push(&s, 104)
+// 	stack.push(&s, 1057)
+
+// 	// drain me baby:
+// 	for v in stack.pop(&s) {
+// 		fmt.printf("%x", v)
+// 	}
+// 	stack.destroy_stack(&s)
+// 	fmt.println("\nend")
+// }
 //
 Stack :: struct(T: typeid) {
 	head:      ^Node(T),
 	freelist:  ^Node(T),
 	allocator: runtime.Allocator,
-}
-
-Node :: struct(T: typeid) {
-	next: ^Node(T),
-	data: T,
 }
 
 make_stack :: proc(
@@ -43,17 +57,18 @@ destroy_stack :: proc(s: ^Stack($T)) {
 }
 
 push :: proc(s: ^Stack($T), elm: T) -> (ok: bool) {
-	head: ^Node(T)
+	node: ^Node(T)
 	if s.freelist != nil {
-		head = s.freelist
-		s.freelist = head.next
+		node = s.freelist
+		s.freelist = node.next
+		node.next = nil
 	} else {
 		err: runtime.Allocator_Error
-		head, err = new(Node(T), s.allocator)
+		node, err = new(Node(T), s.allocator)
 		if err != .None {return false}
 	}
-	head.data = elm
-	sll_insert(&s.head, head)
+	node.data = elm
+	sll_insert(&s.head, node)
 	return true
 }
 pop :: proc(s: ^Stack($T)) -> (v: T, ok: bool) {
@@ -71,28 +86,4 @@ peek :: proc(s: ^Stack($T)) -> (v: T, ok: bool) {
 		ok = true
 	}
 	return
-}
-
-sll_insert :: proc(head: ^^$T, node: ^T) where has_field(T, "next") {
-	if head^ == nil {head^ = node} else {
-		node.next = head^
-		head^ = node
-	}
-}
-sll_remove :: proc(head: ^^$T) -> ^T where has_field(T, "next") {
-	value: ^T
-	if head^ != nil {
-		value = head^
-		head^ = value.next
-		value.next = nil
-	}
-	return value
-}
-sll_destroy :: proc(head: ^^$T, allocator := context.allocator) where has_field(T, "next") {
-	node: ^T = head^
-	for node != nil {
-		next := node.next
-		free(node, allocator)
-		node = next
-	}
 }

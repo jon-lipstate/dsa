@@ -1,17 +1,18 @@
 package dsa
 //
 import "./stack"
+import "./queue"
 import "core:fmt"
 //
 main :: proc() {
-	s := stack.make_stack(int)
-	stack.push(&s, 104)
-	stack.push(&s, 1057)
-
-	// drain me baby:
-	for v in stack.pop(&s) {
+	q := queue.make_queue(int, 2)
+	queue.enqueue(&q, 0xf1)
+	queue.enqueue(&q, 0xf0)
+	queue.enqueue(&q, 0xc0)
+	queue.enqueue(&q, 0xde)
+	for v in queue.dequeue(&q) {
 		fmt.printf("%x", v)
 	}
-	stack.destroy_stack(&s)
-	fmt.println("\nend")
+	queue.destroy_queue(&q)
+	fmt.println("\ndone")
 }
