@@ -1,4 +1,5 @@
 package stack
+//
 import "core:runtime"
 import "../singly_linked"
 Node :: singly_linked.Node
@@ -14,7 +15,7 @@ sll_destroy :: singly_linked.sll_destroy
 // 	stack.push(&s, 104)
 // 	stack.push(&s, 1057)
 
-// 	// drain me baby:
+// 	// drain me:
 // 	for v in stack.pop(&s) {
 // 		fmt.printf("%x", v)
 // 	}

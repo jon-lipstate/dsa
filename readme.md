@@ -1,5 +1,5 @@
 # Data Structures & Algorithms in Odin
 
-SinglyLinked: 
+SinglyLinked: https://youtu.be/AHMR94PTnEs
 Stacks: 
 Queues: 
