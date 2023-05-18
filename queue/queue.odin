@@ -1,12 +1,28 @@
 package queue
-//
+
 import "core:runtime"
 import "../singly_linked"
 Node :: singly_linked.Node
 sll_insert :: singly_linked.sll_insert
 sll_remove :: singly_linked.sll_remove
 sll_destroy :: singly_linked.sll_destroy
+
+// example:
+import "core:fmt"
 //
+main :: proc() {
+	q := make_queue(int, 2)
+	enqueue(&q, 0xf1)
+	enqueue(&q, 0xf0)
+	enqueue(&q, 0xc0)
+	enqueue(&q, 0xde)
+	for v in dequeue(&q) {
+		fmt.printf("%x", v)
+	}
+	destroy_queue(&q)
+	fmt.println("\ndone")
+}
+
 Queue :: struct(T: typeid) {
 	head:      ^Node(T),
 	tail:      ^Node(T),
